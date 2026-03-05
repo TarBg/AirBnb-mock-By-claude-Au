@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<!-- 
+  ============================================================
+  🏠 เว็บจำลอง Airbnb — สำหรับเรียนรู้ HTML & CSS
+  ============================================================
+  โครงสร้างหลัก:
+    1. <head>   → ตั้งค่าภาษา, ฟอนต์, และ CSS
+    2. <header> → แถบนำทางด้านบน (Navbar)
+    3. <main>   → เนื้อหาหลักของหน้า
+    4. <footer> → ส่วนล่างสุดของหน้า
+  ============================================================
+-->
+<html lang="th">
+
+<head>
+  <!-- บอก browser ว่าใช้ตัวอักษรแบบ UTF-8 (รองรับภาษาไทย) -->
+  <meta charset="UTF-8" />
+  <!-- ปรับขนาดหน้าให้พอดีกับทุกอุปกรณ์ (responsive) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airbnb — วิลล่าตั้งใจกลางกรุงเทพฯ</title>
+
+  <!-- นำเข้าฟอนต์จาก Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Circular+Std:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ==============================================
+       🎨 CSS VARIABLES — กำหนดสีและขนาดกลาง
+       ใช้ var(--ชื่อตัวแปร) เรียกใช้ทุกที่ใน CSS
+    ============================================== */
+    :root {
+      --color-primary: #FF385C;     /* สีชมพูแดงของ Airbnb */
+      --color-primary-dark: #E31C5F;
+      --color-text: #222222;        /* สีตัวอักษรหลัก */
+      --color-text-light: #717171;  /* สีตัวอักษรรอง */
+      --color-border: #DDDDDD;      /* สีเส้นขอบ */
+      --color-bg: #FFFFFF;          /* สีพื้นหลัง */
+      --color-bg-hover: #F7F7F7;    /* สีพื้นหลังตอน hover */
+      --font-main: 'Noto Sans Thai', 'Circular Std', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.12);
+    }
+
+    /* ==============================================
+       🔄 RESET — ล้างค่าเริ่มต้นของ browser
+    ============================================== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; /* ทำให้ padding ไม่ทำให้กล่องขยาย */
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--color-text);
+      background: var(--color-bg);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ==============================================
+       📌 NAVBAR — แถบนำทางด้านบน
+       position: sticky → ติดอยู่ด้านบนตลอด
+    ============================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100; /* ลอยอยู่เหนือ element อื่น */
+      background: white;
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 40px;
+    }
+
+    .navbar-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 80px;
+      display: flex;           /* จัดเรียงลูกใน flex container */
+      align-items: center;     /* จัดกึ่งกลางแนวตั้ง */
+      justify-content: space-between; /* กระจายซ้าย-ขวา */
+      gap: 16px;
+    }
+
+    /* โลโก้ Airbnb */
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: var(--color-primary);
+      font-weight: 700;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .logo svg {
+      width: 32px;
+      height: 32px;
+      fill: var(--color-primary);
+    }
+
+    /* ช่องค้นหากลาง navbar */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--color-border);
+      border-radius: 40px;    /* ขอบมนมาก = วงรี */
+      padding: 8px 8px 8px 20px;
+      cursor: pointer;
+      transition: box-shadow 0.2s; /* animation เวลา hover */
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .search-bar:hover {
+      box-shadow: var(--shadow-card);
+    }
+
+    .search-divider {
+      width: 1px;
+      height: 24px;
+      background: var(--color-border);
+    }
+
+    .search-section {
+      padding: 0 12px;
+    }
+
+    .search-section span:first-child {
+      display: block;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .search-section span:last-child {
+      color: var(--color-text-light);
+      font-size: 12px;
+    }
+
+    /* ปุ่มค้นหากลม */
+    .search-btn {
+      background: var(--color-primary);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    /* เมนูด้านขวา */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-link {
+      padding: 10px 14px;
+      border-radius: 24px;
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover {
+      background: var(--color-bg-hover);
+    }
+
+    /* ปุ่มเมนู + โปรไฟล์ */
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--color-border);
+      border-radius: 24px;
+      padding: 6px 6px 6px 12px;
+      cursor: pointer;
+      transition: box-shadow 0.15s;
+    }
+
+    .user-menu:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+    }
+
+    .hamburger {
+      font-size: 16px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #717171;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    /* ==============================================
+       📦 MAIN CONTENT — เนื้อหาหลัก
+    ============================================== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 24px 24px 40px;
+    }
+
+    /* ชื่อที่พัก */
+    .listing-title {
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: var(--color-text);
+    }
+
+    /* แถวปุ่ม แชร์ / บันทึก */
+    .listing-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text);
+      padding: 6px 8px;
+      border-radius: 8px;
+      text-decoration: underline;
+      transition: background 0.15s;
+    }
+
+    .action-btn:hover {
+      background: var(--color-bg-hover);
+    }
+
+    /* ==============================================
+       🖼️ PHOTO GRID — ตารางรูปภาพ
+       display: grid → จัดวางเป็นตาราง
+    ============================================== */
+    .photo-grid {
+      display: grid;
+      /* กำหนด 2 คอลัมน์: ซ้ายใหญ่, ขวาเล็ก */
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 200px 200px;
+      gap: 8px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;  /* ตัดมุมกลมออก */
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    /* รูปแรก (ใหญ่) ครอบคลุม 2 แถว */
+    .photo-main {
+      grid-row: 1 / 3;  /* ยืดจากแถว 1 ถึง 3 */
+    }
+
+    /* คอลัมน์ขวา แบ่งเป็น 4 รูปเล็ก */
+    .photo-grid-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 200px 200px;
+      gap: 8px;
+    }
+
+    /* สไตล์รูปทุกรูป */
+    .photo-item {
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .photo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   /* ครอบคลุมพื้นที่โดยไม่บิดเบี้ยว */
+      transition: transform 0.3s ease; /* animation zoom */
+    }
+
+    .photo-item:hover img {
+      transform: scale(1.04); /* ขยายเล็กน้อยตอน hover */
+    }
+
+    /* ปุ่ม "แสดงรูปทั้งหมด" */
+    .show-all-btn {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background: white;
+      border: 1px solid var(--color-text);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .show-all-btn:hover {
+      background: var(--color-bg-hover);
+    }
+
+    /* ==============================================
+       📐 TWO-COLUMN LAYOUT — แบ่งซ้าย-ขวา
+       ซ้าย: รายละเอียด | ขวา: กล่องจอง
+    ============================================== */
+    .listing-body {
+      display: grid;
+      grid-template-columns: 1fr 380px; /* ซ้ายยืดหยุ่น, ขวา 380px */
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* ==============================================
+       📋 LISTING DETAILS — รายละเอียดซ้าย
+    ============================================== */
+
+    /* ชื่อเจ้าของและข้อมูลห้อง */
+    .listing-subtitle {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .listing-meta {
+      color: var(--color-text-light);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .listing-meta span::after {
+      content: ' · '; /* จุดกลางคั่นข้อมูล */
+    }
+
+    .listing-meta span:last-child::after {
+      content: '';
+    }
+
+    /* เส้นแบ่ง */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--color-border);
+      margin: 24px 0;
+    }
+
+    /* การ์ด host */
+    .host-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .host-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF385C, #FF6B6B);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .host-info h3 {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .host-info p {
+      font-size: 13px;
+      color: var(--color-text-light);
+    }
+
+    /* ไฮไลต์สิ่งอำนวยความสะดวก */
+    .highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin: 16px 0;
+    }
+
+    .highlight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .highlight-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .highlight-text h4 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .highlight-text p {
+      font-size: 13px;
+      color: var(--color-text-light);
+    }
+
+    /* คำอธิบายที่พัก */
+    .description {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--color-text);
+    }
+
+    .show-more {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text);
+      text-decoration: underline;
+      margin-top: 12px;
+      padding: 0;
+    }
+
+    /* ตาราง amenities */
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* 2 คอลัมน์เท่ากัน */
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .amenity-icon {
+      font-size: 20px;
+    }
+
+    /* ==============================================
+       💳 BOOKING CARD — กล่องจองด้านขวา
+       position: sticky → ติดเมื่อ scroll
+    ============================================== */
+    .booking-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 100px; /* ห่างจากบนสุด 100px */
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .price-main {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .price-per {
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    /* กล่องเลือกวันและแขก */
+    .date-guest-box {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .date-input {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .date-input:first-child {
+      border-right: 1px solid var(--color-border);
+    }
+
+    .date-input:hover {
+      background: var(--color-bg-hover);
+    }
+
+    .input-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .input-value {
+      font-size: 13px;
+      color: var(--color-text-light);
+    }
+
+    .guest-input {
+      padding: 12px 16px;
+      border-top: 1px solid var(--color-border);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .guest-input:hover {
+      background: var(--color-bg-hover);
+    }
+
+    /* ปุ่มจอง */
+    .book-btn {
+      width: 100%;
+      background: linear-gradient(to right, #E31C5F, #FF385C);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: opacity 0.2s;
+      font-family: var(--font-main);
+    }
+
+    .book-btn:hover {
+      opacity: 0.9;
+    }
+
+    .book-note {
+      text-align: center;
+      font-size: 13px;
+      color: var(--color-text-light);
+      margin-bottom: 16px;
+    }
+
+    /* รายการค่าใช้จ่าย */
+    .price-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .price-line.underline span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .price-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 700;
+      padding-top: 16px;
+      border-top: 1px solid var(--color-border);
+      margin-top: 4px;
+    }
+
+    /* ==============================================
+       ⭐ RATING SECTION — ส่วนคะแนน
+    ============================================== */
+    .rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .rating-big {
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .rating-stars {
+      color: var(--color-primary);
+      font-size: 20px;
+    }
+
+    .rating-count {
+      font-size: 14px;
+      color: var(--color-text-light);
+    }
+
+    /* แถบ progress รีวิว */
+    .rating-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .rating-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .bar-label {
+      width: 60px;
+      color: var(--color-text-light);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 4px;
+      background: var(--color-border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--color-text);
+      border-radius: 2px;
+      transition: width 0.8s ease; /* animation loading bar */
+    }
+
+    .bar-num {
+      width: 24px;
+      text-align: right;
+      color: var(--color-text-light);
+      font-size: 12px;
+    }
+
+    /* การ์ดรีวิว */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .review-card {
+      padding: 0;
+    }
+
+    .reviewer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .reviewer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .reviewer-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .reviewer-date {
+      font-size: 12px;
+      color: var(--color-text-light);
+    }
+
+    .review-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+
+    /* ==============================================
+       📍 LOCATION SECTION — แผนที่
+    ============================================== */
+    .map-placeholder {
+      width: 100%;
+      height: 320px;
+      background: linear-gradient(135deg, #e8f4f8, #d1e9f0);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      position: relative;
+      overflow: hidden;
+      margin: 16px 0;
+      cursor: pointer;
+    }
+
+    .map-placeholder::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2399c9d8' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .map-pin {
+      position: absolute;
+      font-size: 36px;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+      animation: bounce 1.5s ease-in-out infinite;
+    }
+
+    /* animation สำหรับ pin บนแผนที่ */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    /* ==============================================
+       📸 PHOTO TOUR — ทัวร์รูปถ่าย
+       แสดงหมวดห้องเป็น thumbnail grid
+       คลิกแล้วดูรายละเอียดแต่ละห้อง
+    ============================================== */
+
+    /* Grid thumbnail ด้านบน */
+    .photo-tour-thumbs {
+      display: flex;
+      flex-wrap: wrap;   /* ขึ้นบรรทัดใหม่อัตโนมัติ */
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    /* การ์ด thumbnail แต่ละห้อง */
+    .thumb-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      width: 160px;
+    }
+
+    .thumb-img-wrap {
+      width: 160px;
+      height: 110px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 3px solid transparent;  /* เส้นขอบใสตอนปกติ */
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    /* thumb ที่ถูกเลือก — เปลี่ยนเส้นขอบเป็นสีดำ */
+    .thumb-card.active .thumb-img-wrap {
+      border-color: var(--color-text);
+    }
+
+    .thumb-card:hover .thumb-img-wrap {
+      transform: scale(1.03);
+    }
+
+    .thumb-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .thumb-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    /* ส่วนแสดงรูปและรายละเอียดห้อง */
+    .room-detail {
+      display: grid;
+      /* ซ้าย: ชื่อห้อง | ขวา: รูปภาพ */
+      grid-template-columns: 280px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    .room-detail-info h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .room-detail-info p {
+      font-size: 14px;
+      color: var(--color-text-light);
+      line-height: 1.6;
+    }
+
+    /* Grid รูปด้านขวา: 1 รูปใหญ่ + 2 รูปเล็ก */
+    .room-photos {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      gap: 8px;
+    }
+
+    .room-photo-main {
+      width: 100%;
+      height: 360px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      display: block;
+    }
+
+    .room-photo-sub-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .room-photo-sub {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+      display: block;
+    }
+
+    /* animation เปลี่ยนห้อง */
+    @keyframes roomFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .room-detail.fade-in {
+      animation: roomFadeIn 0.3s ease forwards;
+    }
+
+    /* ==============================================
+       📱 RESPONSIVE — ปรับสำหรับมือถือ
+       @media คือการตั้งเงื่อนไขตามขนาดหน้าจอ
+    ============================================== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 0 16px;
+      }
+
+      .search-bar {
+        display: none; /* ซ่อน search bar บนมือถือ */
+      }
+
+      .container {
+        padding: 16px 16px 40px;
+      }
+
+      .listing-title {
+        font-size: 20px;
+      }
+
+      /* เปลี่ยนเป็น 1 คอลัมน์บนมือถือ */
+      .listing-body {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 240px;
+        height: 240px;
+      }
+
+      .photo-main {
+        grid-row: 1;
+      }
+
+      .photo-grid-right {
+        display: none;
+      }
+
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .amenities-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-card {
+        position: static; /* ยกเลิก sticky บนมือถือ */
+      }
+
+      /* Photo tour responsive */
+      .room-detail {
+        grid-template-columns: 1fr;
+      }
+
+      .thumb-card {
+        width: 120px;
+      }
+
+      .thumb-img-wrap {
+        width: 120px;
+        height: 85px;
+      }
+    }
+
+    /* เพิ่มความสวยงามด้วย scroll animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==========================================
+       📌 NAVBAR — แถบนำทางด้านบน
+  =========================================== -->
+  <header class="navbar">
+    <div class="navbar-inner">
+
+      <!-- โลโก้ -->
+      <a href="#" class="logo">
+        <!-- SVG คือรูปภาพแบบ Vector (ขยายได้ไม่แตก) -->
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 1C7.716 1 1 7.716 1 16s6.716 15 15 15 15-6.716 15-15S24.284 1 16 1zm0 2c7.18 0 13 5.82 13 13s-5.82 13-13 13S3 23.18 3 16 8.82 3 16 3zm0 4c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 2c1.105 0 2 .895 2 2s-.895 2-2 2-2-.895-2-2 .895-2 2-2zm-6 8c0 3.314 2.686 6 6 6s6-2.686 6-6H10z"/>
+        </svg>
+        airbnb
+      </a>
+
+      <!-- ช่องค้นหา -->
+      <div class="search-bar">
+        <div class="search-section">
+          <span>ที่ไหน...</span>
+          <span>ค้นหาจุดหมายปลายทาง</span>
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-section">
+          <span>ลัปดาห์ทุก...</span>
+          <span>เพิ่มวันที่</span>
+        </div>
+        <div class="search-divider"></div>
+        <div class="search-section">
+          <span>แขก</span>
+          <span>เพิ่มแขก</span>
+        </div>
+        <button class="search-btn">
+          <!-- 🔍 ไอคอนแว่นขยาย -->
+          <svg width="16" height="16" viewBox="0 0 32 32" fill="white">
+            <path d="M13 3C7.477 3 3 7.477 3 13s4.477 10 10 10a9.96 9.96 0 006.322-2.264l6.971 6.97 1.414-1.414-6.97-6.97A9.96 9.96 0 0023 13C23 7.477 18.523 3 13 3zm0 2c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- เมนูขวา -->
+      <nav class="nav-right">
+        <a href="#" class="nav-link">ลงประกาศที่พัก</a>
+        <!-- ปุ่มโลก -->
+        <button class="nav-link" style="background:none;border:none;cursor:pointer;font-size:20px;">🌐</button>
+        <div class="user-menu">
+          <span class="hamburger">☰</span>
+          <div class="avatar">👤</div>
+        </div>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- ==========================================
+       📦 MAIN — เนื้อหาหลัก
+  =========================================== -->
+  <main>
+    <div class="container">
+
+      <!-- ชื่อที่พัก -->
+      <h1 class="listing-title">
+        วิลล่าตั้งใจกลางกรุงเทพฯ - เดินถึงพระราม 9 - สี่พระ - สยามแควร์ - ร้านกาแฟแอลวี - บริการรับส่งสนามบิน/ใกล้ตลาดนัด จุฬาลงกรณ์/สุขุมวิท
+      </h1>
+
+      <!-- ปุ่ม แชร์ / บันทึก -->
+      <div class="listing-actions">
+        <div></div>
+        <div style="display:flex; gap:8px;">
+          <button class="action-btn">⬆️ แชร์</button>
+          <button class="action-btn">🤍 บันทึก</button>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           🖼️ PHOTO GRID — ตาราง 5 รูป
+      =========================================== -->
+      <div class="photo-grid">
+
+        <!-- รูปหลัก (ใหญ่ซ้าย) -->
+        <div class="photo-main photo-item">
+          <img
+            src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80"
+            alt="ห้องนั่งเล่นหลัก"
+          />
+        </div>
+
+        <!-- 4 รูปเล็กด้านขวา -->
+        <div class="photo-grid-right">
+          <div class="photo-item">
+            <img
+              src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400&q=80"
+              alt="ห้องนอน"
+            />
+          </div>
+          <div class="photo-item">
+            <img
+              src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=400&q=80"
+              alt="ห้องครัว"
+            />
+          </div>
+          <div class="photo-item">
+            <img
+              src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=400&q=80"
+              alt="ห้องน้ำ"
+            />
+          </div>
+          <div class="photo-item">
+            <img
+              src="https://images.unsplash.com/photo-1534595038511-9f219fe0c979?w=400&q=80"
+              alt="วิวจากระเบียง"
+            />
+          </div>
+        </div>
+
+        <!-- ปุ่มดูรูปทั้งหมด -->
+        <button class="show-all-btn">⊞ แสดงรูปทั้งหมด</button>
+      </div>
+
+      <!-- ==========================================
+           📐 สองคอลัมน์: รายละเอียด | จองห้อง
+      =========================================== -->
+      <div class="listing-body">
+
+        <!-- คอลัมน์ซ้าย: รายละเอียด -->
+        <div class="listing-left">
+
+          <!-- ชื่อเจ้าของ + ข้อมูล -->
+          <div class="host-card">
+            <div class="host-avatar">ส</div>
+            <div class="host-info">
+              <h3>บ้านทั้งหลัง ใน Ratchathewi ไทย</h3>
+              <p>เจ้าของ: คุณสมชาย</p>
+            </div>
+          </div>
+
+          <p class="listing-meta">
+            <span>10 คน</span>
+            <span>3 ห้องนอน</span>
+            <span>5 เตียง</span>
+            <span>2.5 ห้องน้ำ</span>
+          </p>
+
+          <!-- คะแนน -->
+          <div style="display:flex; align-items:center; gap:6px; margin-bottom:16px;">
+            <span style="font-size:15px; font-weight:600;">⭐ 4.63</span>
+            <a href="#reviews" style="color:var(--color-text); font-size:14px; font-weight:500;">· 19 รีวิว</a>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- ไฮไลต์ -->
+          <div class="highlights">
+            <div class="highlight-item">
+              <div class="highlight-icon">🏡</div>
+              <div class="highlight-text">
+                <h4>บ้านทั้งหลัง</h4>
+                <p>คุณจะมีอพาร์ทเมนต์เป็นของตัวเอง</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">✨</div>
+              <div class="highlight-text">
+                <h4>ทำความสะอาดอย่างพิถีพิถัน</h4>
+                <p>เจ้าของที่พักให้ความสำคัญกับความสะอาดเป็นอย่างมาก</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">📍</div>
+              <div class="highlight-text">
+                <h4>ทำเลดีเยี่ยม</h4>
+                <p>ผู้เข้าพัก 100% ให้คะแนนทำเลนี้ 5 ดาว</p>
+              </div>
+            </div>
+            <div class="highlight-item">
+              <div class="highlight-icon">🔑</div>
+              <div class="highlight-text">
+                <h4>เช็คอินง่าย</h4>
+                <p>ผู้เข้าพักชื่นชมกระบวนการเช็คอิน</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- คำอธิบาย -->
+          <h2 class="section-title" style="font-size:18px;">เกี่ยวกับที่พักนี้</h2>
+          <p class="description">
+            ยินดีต้อนรับสู่วิลล่าหรูใจกลางกรุงเทพฯ ที่พักแห่งนี้ตั้งอยู่ในทำเลยุทธศาสตร์
+            เดินทางสะดวก ใกล้แหล่งท่องเที่ยว ห้างสรรพสินค้า และสิ่งอำนวยความสะดวกครบครัน
+            เหมาะสำหรับครอบครัวหรือกลุ่มเพื่อนที่ต้องการพักผ่อนคุณภาพสูง
+          </p>
+          <button class="show-more">แสดงเพิ่มเติม ›</button>
+
+          <hr class="divider" />
+
+          <!-- สิ่งอำนวยความสะดวก -->
+          <h2 class="section-title">สิ่งที่พักนี้มีให้</h2>
+          <div class="amenities-grid">
+            <div class="amenity-item"><span class="amenity-icon">🌊</span> สระว่ายน้ำ</div>
+            <div class="amenity-item"><span class="amenity-icon">🅿️</span> ที่จอดรถฟรี</div>
+            <div class="amenity-item"><span class="amenity-icon">📶</span> WiFi ความเร็วสูง</div>
+            <div class="amenity-item"><span class="amenity-icon">❄️</span> เครื่องปรับอากาศ</div>
+            <div class="amenity-item"><span class="amenity-icon">📺</span> TV + Netflix</div>
+            <div class="amenity-item"><span class="amenity-icon">🍳</span> ครัวพร้อมใช้งาน</div>
+            <div class="amenity-item"><span class="amenity-icon">🧺</span> เครื่องซักผ้า</div>
+            <div class="amenity-item"><span class="amenity-icon">🐾</span> รับสัตว์เลี้ยง</div>
+          </div>
+
+        </div>
+
+        <!-- ==========================================
+             💳 คอลัมน์ขวา: กล่องจอง
+        =========================================== -->
+        <aside>
+          <div class="booking-card">
+
+            <!-- ราคา -->
+            <div class="price-row">
+              <span class="price-main">฿8,500</span>
+              <span class="price-per">/ คืน</span>
+            </div>
+
+            <!-- เลือกวันและแขก -->
+            <div class="date-guest-box">
+              <div class="date-row">
+                <div class="date-input">
+                  <span class="input-label">เช็คอิน</span>
+                  <span class="input-value">28/3/2026</span>
+                </div>
+                <div class="date-input">
+                  <span class="input-label">เช็คเอาท์</span>
+                  <span class="input-value">29/3/2026</span>
+                </div>
+              </div>
+              <div class="guest-input">
+                <div>
+                  <span class="input-label">แขก</span>
+                  <span class="input-value">10 แขก</span>
+                </div>
+                <span>⌄</span>
+              </div>
+            </div>
+
+            <!-- ปุ่มจอง -->
+            <button class="book-btn">จอง</button>
+            <p class="book-note">คุณจะยังไม่ถูกเรียกเก็บเงิน</p>
+
+            <!-- รายการค่าใช้จ่าย -->
+            <div class="price-breakdown">
+              <div class="price-line underline">
+                <span>฿8,500 x 1 คืน</span>
+                <span>฿8,500</span>
+              </div>
+              <div class="price-line underline">
+                <span>ค่าทำความสะอาด</span>
+                <span>฿500</span>
+              </div>
+              <div class="price-line underline">
+                <span>ค่าบริการ Airbnb</span>
+                <span>฿1,350</span>
+              </div>
+            </div>
+
+            <div class="price-total">
+              <span>รวมก่อนหักภาษี</span>
+              <span>฿10,350</span>
+            </div>
+
+          </div>
+        </aside>
+
+      </div><!-- /listing-body -->
+
+      <!-- ==========================================
+           📸 PHOTO TOUR — ทัวร์รูปถ่าย
+           ใช้ JavaScript เพื่อสลับห้องที่แสดง
+      =========================================== -->
+      <hr class="divider" style="margin-top:48px;" />
+      <section id="photo-tour">
+        <h2 class="section-title">ทัวร์รูปถ่าย</h2>
+
+        <!-- 
+          Thumbnail grid — data-room="ชื่อห้อง" คือ custom attribute
+          JavaScript จะอ่านค่านี้เพื่อรู้ว่าคลิกห้องไหน
+        -->
+        <div class="photo-tour-thumbs" id="thumbGrid">
+
+          <div class="thumb-card active" data-room="living" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=300&q=70" alt="ห้องนั่งเล่น" />
+            </div>
+            <span class="thumb-label">ห้องนั่งเล่น</span>
+          </div>
+
+          <div class="thumb-card" data-room="bed1" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=300&q=70" alt="ห้องนอน 1" />
+            </div>
+            <span class="thumb-label">ห้องนอน 1</span>
+          </div>
+
+          <div class="thumb-card" data-room="bed2" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&q=70" alt="ห้องนอน 2" />
+            </div>
+            <span class="thumb-label">ห้องนอน 2</span>
+          </div>
+
+          <div class="thumb-card" data-room="bed3" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?w=300&q=70" alt="ห้องนอน 3" />
+            </div>
+            <span class="thumb-label">ห้องนอน 3</span>
+          </div>
+
+          <div class="thumb-card" data-room="bath1" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=300&q=70" alt="ห้องน้ำ 1" />
+            </div>
+            <span class="thumb-label">ห้องน้ำเต็มรูปแบบ 1</span>
+          </div>
+
+          <div class="thumb-card" data-room="bath2" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=300&q=70" alt="ห้องน้ำ 2" />
+            </div>
+            <span class="thumb-label">ห้องน้ำเต็มรูปแบบ 2</span>
+          </div>
+
+          <div class="thumb-card" data-room="toilet" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=300&q=70" alt="ห้องสุขา" />
+            </div>
+            <span class="thumb-label">ห้องสุขาพร้อมอ่างล้างหน้า</span>
+          </div>
+
+          <div class="thumb-card" data-room="terrace" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=300&q=70" alt="ลาน" />
+            </div>
+            <span class="thumb-label">ลาน</span>
+          </div>
+
+          <div class="thumb-card" data-room="laundry" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=70" alt="พื้นที่ซักรีด" />
+            </div>
+            <span class="thumb-label">พื้นที่สำหรับซักรีด</span>
+          </div>
+
+          <div class="thumb-card" data-room="exterior" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=300&q=70" alt="ด้านนอก" />
+            </div>
+            <span class="thumb-label">ด้านนอก</span>
+          </div>
+
+          <div class="thumb-card" data-room="other" onclick="switchRoom(this)">
+            <div class="thumb-img-wrap">
+              <img src="https://images.unsplash.com/photo-1534595038511-9f219fe0c979?w=300&q=70" alt="รูปอื่นๆ" />
+            </div>
+            <span class="thumb-label">รูปอื่นๆ</span>
+          </div>
+
+        </div><!-- /thumbGrid -->
+
+        <!-- 
+          ส่วนแสดงรายละเอียดห้อง — เปลี่ยนด้วย JavaScript
+          id="roomDetail" ใช้อ้างอิงใน JS
+        -->
+        <div class="room-detail fade-in" id="roomDetail">
+
+          <!-- ซ้าย: ชื่อห้อง + สิ่งอำนวยความสะดวก -->
+          <div class="room-detail-info" id="roomInfo">
+            <h3>ห้องนั่งเล่น</h3>
+            <p>ทีวี · เครื่องปรับอากาศ</p>
+          </div>
+
+          <!-- ขวา: รูปภาพ (1 ใหญ่ + 2 เล็ก) -->
+          <div class="room-photos">
+            <img
+              id="roomPhotoMain"
+              class="room-photo-main"
+              src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=80"
+              alt="ห้องนั่งเล่น"
+            />
+            <div class="room-photo-sub-row">
+              <img
+                id="roomPhotoSub1"
+                class="room-photo-sub"
+                src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80"
+                alt="ห้องนั่งเล่น มุม 2"
+              />
+              <img
+                id="roomPhotoSub2"
+                class="room-photo-sub"
+                src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80"
+                alt="ห้องนั่งเล่น มุม 3"
+              />
+            </div>
+          </div>
+
+        </div><!-- /roomDetail -->
+
+      </section>
+
+      <!-- ==========================================
+           ⭐ REVIEWS — รีวิว
+      =========================================== -->
+      <hr class="divider" style="margin-top:48px;" />
+      <section id="reviews">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+          <span class="rating-big">⭐ 4.63</span>
+          <div>
+            <div class="rating-stars">★★★★★</div>
+            <div class="rating-count">19 รีวิว</div>
+          </div>
+        </div>
+
+        <!-- Rating bars -->
+        <div class="rating-bars">
+          <div class="rating-bar-row">
+            <span class="bar-label">ความสะอาด</span>
+            <div class="bar-track"><div class="bar-fill" style="width:92%"></div></div>
+            <span class="bar-num">4.6</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="bar-label">ความถูกต้อง</span>
+            <div class="bar-track"><div class="bar-fill" style="width:88%"></div></div>
+            <span class="bar-num">4.4</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="bar-label">การสื่อสาร</span>
+            <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
+            <span class="bar-num">4.8</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="bar-label">ทำเล</span>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <span class="bar-num">5.0</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="bar-label">เช็คอิน</span>
+            <div class="bar-track"><div class="bar-fill" style="width:96%"></div></div>
+            <span class="bar-num">4.8</span>
+          </div>
+          <div class="rating-bar-row">
+            <span class="bar-label">ราคาคุ้มค่า</span>
+            <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+            <span class="bar-num">4.5</span>
+          </div>
+        </div>
+
+        <!-- การ์ดรีวิว -->
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar" style="background: linear-gradient(135deg,#FF6B6B,#FF385C);">น</div>
+              <div>
+                <p class="reviewer-name">นิรนาม</p>
+                <p class="reviewer-date">กุมภาพันธ์ 2026</p>
+              </div>
+            </div>
+            <p class="review-text">ที่พักดีมากครับ สะอาด ทำเลดี ใกล้ร้านอาหารและห้างสรรพสินค้า เจ้าของดูแลเป็นอย่างดี แนะนำมากๆ</p>
+          </div>
+          <div class="review-card">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar" style="background: linear-gradient(135deg,#4ECDC4,#2980B9);">ส</div>
+              <div>
+                <p class="reviewer-name">สุมาลี</p>
+                <p class="reviewer-date">มกราคม 2026</p>
+              </div>
+            </div>
+            <p class="review-text">น่ารักมาก บ้านสวยงาม สิ่งอำนวยความสะดวกครบครัน WiFi แรง ห้องพักกว้างขวาง จะกลับมาพักอีกแน่นอน</p>
+          </div>
+          <div class="review-card">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar" style="background: linear-gradient(135deg,#F7971E,#FFD200);">ว</div>
+              <div>
+                <p class="reviewer-name">วิชัย</p>
+                <p class="reviewer-date">ธันวาคม 2025</p>
+              </div>
+            </div>
+            <p class="review-text">พักกับครอบครัว 10 คน สะดวกสบายมากๆ ห้องครัวใหญ่ ทำอาหารเองได้ เจ้าของตอบไลน์ไว มาก</p>
+          </div>
+          <div class="review-card">
+            <div class="reviewer-info">
+              <div class="reviewer-avatar" style="background: linear-gradient(135deg,#6C5CE7,#a29bfe);">ม</div>
+              <div>
+                <p class="reviewer-name">มานี</p>
+                <p class="reviewer-date">พฤศจิกายน 2025</p>
+              </div>
+            </div>
+            <p class="review-text">ทำเลดีสุดๆ เดินทางสะดวก ใกล้รถไฟฟ้า ห้องสวย ตกแต่งทันสมัย จะแนะนำให้เพื่อนมาพักต่อไป</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==========================================
+           📍 LOCATION — ที่ตั้ง
+      =========================================== -->
+      <hr class="divider" style="margin-top:48px;" />
+      <section>
+        <h2 class="section-title">ที่ตั้ง</h2>
+
+        <!-- Placeholder แผนที่ -->
+        <div class="map-placeholder">
+          <span class="map-pin">📍</span>
+        </div>
+
+        <p style="font-size:15px; font-weight:600; margin-bottom:8px;">Ratchathewi, กรุงเทพมหานคร, ประเทศไทย</p>
+        <p style="font-size:14px; color:var(--color-text-light); line-height:1.7;">
+          ตั้งอยู่ในย่าน Ratchathewi ใจกลางกรุงเทพฯ ใกล้สถานี BTS สยาม และ MRT พระราม 9
+          สะดวกในการเดินทางไปทุกจุดในเมือง
+        </p>
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ==========================================
+       🦶 FOOTER — ส่วนล่างสุด
+  =========================================== -->
+  <footer style="background:#F7F7F7; border-top:1px solid var(--color-border); padding:40px 24px; margin-top:60px;">
+    <div style="max-width:1120px; margin:0 auto;">
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:32px; margin-bottom:32px;">
+        <div>
+          <h4 style="font-size:13px; font-weight:700; margin-bottom:12px;">การสนับสนุน</h4>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">ศูนย์ช่วยเหลือ</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">AirCover</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">ต่อต้านการเลือกปฏิบัติ</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px; font-weight:700; margin-bottom:12px;">ชุมชน</h4>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">Airbnb.org</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">สนับสนุนผู้ลี้ภัย</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px; font-weight:700; margin-bottom:12px;">ลงประกาศที่พัก</h4>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">ลงประกาศที่พักของคุณ</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">AirCover สำหรับเจ้าของที่พัก</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:13px; font-weight:700; margin-bottom:12px;">Airbnb</h4>
+          <ul style="list-style:none; display:flex; flex-direction:column; gap:8px;">
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">ข่าวสาร</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">นักลงทุนสัมพันธ์</a></li>
+            <li><a href="#" style="color:var(--color-text-light); text-decoration:none; font-size:13px;">ร่วมงานกับเรา</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--color-border); padding-top:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <p style="font-size:13px; color:var(--color-text-light);">© 2026 Airbnb, Inc. · <a href="#" style="color:var(--color-text-light);">ความเป็นส่วนตัว</a> · <a href="#" style="color:var(--color-text-light);">เงื่อนไข</a> · <a href="#" style="color:var(--color-text-light);">แผนที่เว็บไซต์</a></p>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button style="background:none;border:none;cursor:pointer;font-size:13px;font-weight:500;">🌐 ภาษาไทย</button>
+          <button style="background:none;border:none;cursor:pointer;font-size:13px;font-weight:500;">฿ THB</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- ==========================================
+       ⚙️ JAVASCRIPT — สลับห้องในทัวร์รูปถ่าย
+       
+       ข้อมูลแต่ละห้อง: ชื่อ, คำอธิบาย, และรูป 3 รูป
+  =========================================== -->
+  <script>
+    /*
+      rooms คือ Object (พจนานุกรม) เก็บข้อมูลทุกห้อง
+      key   = ชื่อห้อง (ตรงกับ data-room ใน HTML)
+      value = ข้อมูลห้องนั้น
+    */
+    const rooms = {
+      living: {
+        name: 'ห้องนั่งเล่น',
+        desc: 'ทีวี · เครื่องปรับอากาศ',
+        main: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&q=80',
+      },
+      bed1: {
+        name: 'ห้องนอน 1 (2F)',
+        desc: 'เตียง 6 ฟุต · เครื่องนอนลาเท็กซ์ไทย · รองรับ 4 คน',
+        main: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&q=80',
+      },
+      bed2: {
+        name: 'ห้องนอน 2 (3F)',
+        desc: 'เตียง 6 ฟุต · เครื่องนอนลาเท็กซ์ไทย · รองรับ 2 คน',
+        main: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80',
+      },
+      bed3: {
+        name: 'ห้องนอน 3 (4F)',
+        desc: 'เตียง 5 ฟุต · เครื่องนอนลาเท็กซ์ไทย · รองรับ 2–4 คน',
+        main: 'https://images.unsplash.com/photo-1540518614846-7eded433c457?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&q=80',
+      },
+      bath1: {
+        name: 'ห้องน้ำเต็มรูปแบบ 1',
+        desc: 'ฝักบัว · อ่างล้างหน้า · สุขภัณฑ์ · กระจก',
+        main: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=500&q=80',
+      },
+      bath2: {
+        name: 'ห้องน้ำเต็มรูปแบบ 2',
+        desc: 'ฝักบัว · อ่างล้างหน้า · สุขภัณฑ์ · กระจก',
+        main: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=500&q=80',
+      },
+      toilet: {
+        name: 'ห้องสุขาพร้อมอ่างล้างหน้า',
+        desc: 'สุขภัณฑ์ · อ่างล้างหน้า · กระจก',
+        main: 'https://images.unsplash.com/photo-1584622781564-1d987f7333c1?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=500&q=80',
+      },
+      terrace: {
+        name: 'ลาน',
+        desc: 'โต๊ะรับประทานอาหาร · วิวเมือง · อากาศบริสุทธิ์',
+        main: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1534595038511-9f219fe0c979?w=500&q=80',
+      },
+      laundry: {
+        name: 'พื้นที่สำหรับซักรีด',
+        desc: 'เครื่องซักผ้า · เครื่องอบผ้า · ราวตากผ้า',
+        main: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1534595038511-9f219fe0c979?w=500&q=80',
+      },
+      exterior: {
+        name: 'ด้านนอก',
+        desc: 'ทางเข้าหลัก · บริเวณโดยรอบ · ที่จอดรถ',
+        main: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=500&q=80',
+      },
+      other: {
+        name: 'รูปอื่นๆ',
+        desc: 'บริเวณใกล้เคียง · ห้างสรรพสินค้า · สถานที่ท่องเที่ยว',
+        main: 'https://images.unsplash.com/photo-1534595038511-9f219fe0c979?w=900&q=80',
+        sub1: 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=500&q=80',
+        sub2: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=500&q=80',
+      },
+    };
+
+    /*
+      switchRoom(el) — ฟังก์ชันเปลี่ยนห้องที่แสดง
+      รับ: el = element ที่ถูกคลิก (.thumb-card)
+    */
+    function switchRoom(el) {
+      // 1. ดึงชื่อห้องจาก data-room attribute
+      const roomKey = el.getAttribute('data-room');
+      const room = rooms[roomKey];
+
+      // 2. เอา class "active" ออกจาก thumb ทุกอัน
+      document.querySelectorAll('.thumb-card').forEach(c => c.classList.remove('active'));
+
+      // 3. ใส่ class "active" ให้ thumb ที่คลิก
+      el.classList.add('active');
+
+      // 4. อัปเดตข้อมูลห้องทางซ้าย
+      document.getElementById('roomInfo').innerHTML =
+        `<h3>${room.name}</h3><p>${room.desc}</p>`;
+
+      // 5. อัปเดตรูปภาพ
+      document.getElementById('roomPhotoMain').src = room.main;
+      document.getElementById('roomPhotoMain').alt = room.name;
+      document.getElementById('roomPhotoSub1').src  = room.sub1;
+      document.getElementById('roomPhotoSub2').src  = room.sub2;
+
+      // 6. เล่น animation fade-in เมื่อเปลี่ยนห้อง
+      const detail = document.getElementById('roomDetail');
+      detail.classList.remove('fade-in');
+      // ใช้ requestAnimationFrame เพื่อให้ browser รีเซ็ต animation ได้
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          detail.classList.add('fade-in');
+        });
+      });
+
+      // 7. Scroll ให้เห็นส่วนรายละเอียด (ถ้าอยู่นอกหน้าจอ)
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+
+</body>
+</html>
